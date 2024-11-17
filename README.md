@@ -1,6 +1,6 @@
 # Rubik BLD Copilot (backend) 
 
-A smartphone app to manage your Rubik BLD method
+A smartphone app to manage your Rubik blindfolded solving method
 
 <img width=100 src="https://i.ibb.co/TcYYJjc/48301f3f3f2449f3eafb874add5a966e-removebg-preview.png">
 

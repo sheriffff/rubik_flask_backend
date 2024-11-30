@@ -4,6 +4,8 @@ import pymysql
 from pymysql.cursors import DictCursor
 import os
 
+from utils import map_commutator
+
 app = Flask(__name__)
 CORS(app)
 
@@ -73,7 +75,7 @@ def get_user_commutators(piece_type, user_name):
                 {
                     'first_letter': stickers_to_letters[elem['first_sticker']],
                     'second_letter': stickers_to_letters[elem['second_sticker']],
-                    'commutator': elem['commutator']
+                    'commutator': map_commutator(elem['commutator'], stickers_to_letters)
                 }
                 for elem in results
             ]

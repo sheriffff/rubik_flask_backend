@@ -17,6 +17,6 @@ def map_commutator(input_string, mapping):
         mapped_elements = [mapping.get(elem, elem) for elem in elements]
 
         # Rebuild the string with the mapped elements
-        mapped_part = f"({','.join(mapped_elements)})"
+        mapped_part = f"({''.join(mapped_elements)})"
         return input_string[:start] + mapped_part + input_string[end + 1:]
     return input_string  # Return original if no curly brackets found

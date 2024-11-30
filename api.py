@@ -45,13 +45,31 @@ def get_user_stickers_and_letters(piece_type, user_name):
             query = f"""
                 SELECT sticker, letter 
                 FROM {piece_type}_stickers 
-                WHERE user_name = %s
+                WHERE user_name = '{user_name}'
             """
-            cursor.execute(query, (user_name,))
+            cursor.execute(query)
             results = cursor.fetchall()
         return jsonify(results)
     finally:
         connection.close()
+
+
+@app.route('/commutators/<piece_type>/<user_name>', methods=['GET'])
+def get_user_commutators(piece_type, user_name):
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+            SELECT first_sticker, second_sticker, commutator
+            FROM {piece_type}_commutators
+            """
+            cursor.execute(query)
+            results = cursor.fetchall()
+            # TODO: translate to custom letters
+            return jsonify(results)
+    finally:
+        connection.close()
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

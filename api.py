@@ -65,7 +65,19 @@ def get_user_commutators(piece_type, user_name):
             """
             cursor.execute(query)
             results = cursor.fetchall()
-            # TODO: translate to custom letters
+            # TODO: translate to custom letters: call stickers endpoint and map first_sticker and second_sticker to letters
+            stickers_and_letters = get_user_stickers_and_letters(piece_type, user_name)
+            stickers_to_letters = {elem['sticker']: elem['letter'] for elem in stickers_and_letters}
+
+            results = [
+                {
+                    'first_letter': stickers_to_letters[elem['first_sticker']],
+                    'second_letter': stickers_to_letters[elem['second_sticker']],
+                    'commutator': elem['commutator']
+                }
+                for elem in results
+            ]
+
             return jsonify(results)
     finally:
         connection.close()

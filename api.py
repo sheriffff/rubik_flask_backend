@@ -65,10 +65,8 @@ def get_user_commutators(piece_type, user_name):
             """
             cursor.execute(query)
             results = cursor.fetchall()
-            columns = [desc[0] for desc in cursor.description]
-            results = [dict(zip(columns, row)) for row in results]
 
-            stickers_and_letters = get_user_stickers_and_letters(piece_type, user_name)
+            stickers_and_letters = get_user_stickers_and_letters(piece_type, user_name).get_json()
             stickers_to_letters = {elem['sticker']: elem['letter'] for elem in stickers_and_letters}
 
             results = [

@@ -26,6 +26,7 @@ def get_db_connection():
 def home():
     return "APP IS UP AND RUNNING", 200
 
+
 # TODO: shall connect each time? or reuse connection?
 @app.route('/users', methods=['GET'])
 def get_users():
@@ -81,6 +82,23 @@ def get_user_commutators(piece_type, user_name):
             ]
 
             return jsonify(results)
+    finally:
+        connection.close()
+
+
+@app.route('/letter_pairs/<user_name>', methods=['GET'])
+def get_user_letter_pairs(user_name):
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                SELECT first_letter, second_letter, word
+                FROM letter_pairs
+                WHERE user_name = '{user_name}'
+            """
+            cursor.execute(query)
+            results = cursor.fetchall()
+        return jsonify(results)
     finally:
         connection.close()
 

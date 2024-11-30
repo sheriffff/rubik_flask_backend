@@ -58,7 +58,7 @@ def get_user_stickers_and_letters(piece_type, user_name):
 def get_user_commutators(piece_type, user_name):
     connection = get_db_connection()
     try:
-        with connection.cursor() as cursor:
+        with (connection.cursor() as cursor):
             query = f"""
             SELECT first_sticker, second_sticker, commutator
             FROM {piece_type}_commutators
@@ -69,16 +69,18 @@ def get_user_commutators(piece_type, user_name):
             stickers_and_letters = get_user_stickers_and_letters(piece_type, user_name)
             stickers_to_letters = {elem['sticker']: elem['letter'] for elem in stickers_and_letters}
 
-            results = [
+            results_dict = jsonify(results)
+
+            results_dict = [
                 {
                     'first_letter': stickers_to_letters[elem['first_sticker']],
                     'second_letter': stickers_to_letters[elem['second_sticker']],
                     'commutator': elem['commutator']
                 }
-                for elem in results
+                for elem in results_dict
             ]
 
-            return jsonify(results)
+            return results_dict
     finally:
         connection.close()
 

@@ -59,12 +59,9 @@ class Commutator:
 
     def __repr__(self) -> str:
         """
-        String representation for debugging.
-
-        Returns:
-            str: A string representation of the commutator.
+        String representations
         """
-        return f"Commutator(simplified_form='{self.simplified_form}', full_form='{self.full_form}')"
+        return f"{self.simplified_form}\n{self.full_form}"
 
 
 if __name__ == "__main__":

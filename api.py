@@ -63,7 +63,7 @@ def get_user_commutators(piece_type, user_name):
     try:
         with (connection.cursor() as cursor):
             query = f"""
-            SELECT first_sticker, second_sticker, commutator
+            SELECT first_sticker, second_sticker, commutator, commutator_simplified
             FROM {piece_type}_commutators
             """
             cursor.execute(query)

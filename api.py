@@ -76,7 +76,8 @@ def get_user_commutators(piece_type, user_name):
                 {
                     'first_letter': stickers_to_letters[elem['first_sticker']],
                     'second_letter': stickers_to_letters[elem['second_sticker']],
-                    'commutator': map_commutator(elem['commutator'], stickers_to_letters)
+                    'commutator': map_commutator(elem['commutator'], stickers_to_letters),
+                    "commutator_simplified": elem['commutator_simplified']
                 }
                 for elem in results
             ]

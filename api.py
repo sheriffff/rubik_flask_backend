@@ -107,18 +107,15 @@ def get_user_letter_pairs(user_name):
 @app.route('/update_letter_pair/<int:id_>', methods=['PATCH'])
 def update_letter_pair(id_: int) -> str:
     data = request.json  # Get JSON body
-    column = data.get('column')
-    new_value = data.get('new_value')
-    print(column)
-    print(new_value)
-    if not column or not new_value:
+    new_word = data.get('newWord')
+    if not new_word:
         return jsonify({'error': 'Invalid request data'}), 400
 
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
-            query = f"UPDATE letter_pairs SET {column} = %s WHERE id = %s"
-            cursor.execute(query, (new_value, id_))
+            query = f"UPDATE letter_pairs SET word = {new_word} WHERE id = {id_}"
+            cursor.execute(query)
             connection.commit()
         return jsonify({'message': 'Letter pair updated successfully'}), 200
     except Exception as e:

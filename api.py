@@ -104,7 +104,7 @@ def get_user_letter_pairs(user_name):
         connection.close()
 
 
-@app.route('/update_letter_pair/<int:id>', methods=['PATCH'])
+@app.route('/update_letter_pair/<int:id_>', methods=['PATCH'])
 def update_letter_pair(id_: int) -> str:
     data = request.json  # Get JSON body
     column = data.get('column')

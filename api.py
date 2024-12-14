@@ -116,7 +116,7 @@ def update_letter_pair(id_: int) -> str:
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:
-            query = f"UPDATE letter_pairs SET word = {new_word} WHERE id = {id_}"
+            query = f"UPDATE letter_pairs SET word = '{new_word}' WHERE id = {id_}"
             cursor.execute(query)
             connection.commit()
         return jsonify({'message': 'Letter pair updated successfully'}), 200

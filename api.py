@@ -109,7 +109,8 @@ def update_letter_pair(id_: int) -> str:
     data = request.json  # Get JSON body
     column = data.get('column')
     new_value = data.get('new_value')
-
+    print(column)
+    print(new_value)
     if not column or not new_value:
         return jsonify({'error': 'Invalid request data'}), 400
 

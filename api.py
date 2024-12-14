@@ -108,11 +108,9 @@ def get_user_letter_pairs(user_name):
 def update_letter_pair(id_: int) -> str:
     data = request.json  # Get JSON body
     new_word = data.get('newWord')
-    print(data)
     if not new_word:
         return jsonify({'error': 'Invalid request data'}), 400
 
-    print(new_word)
     connection = get_db_connection()
     try:
         with connection.cursor() as cursor:

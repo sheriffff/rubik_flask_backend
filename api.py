@@ -93,7 +93,7 @@ def get_user_letter_pairs(user_name):
     try:
         with connection.cursor() as cursor:
             query = f"""
-                SELECT first_letter, second_letter, word
+                SELECT id, first_letter, second_letter, word
                 FROM letter_pairs
                 WHERE user_name = '{user_name}'
             """

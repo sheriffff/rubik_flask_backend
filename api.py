@@ -40,6 +40,23 @@ def get_users():
         connection.close()
 
 
+@app.route('/buffer/<piece_type>/<user_name>', methods=['GET'])
+def get_user_buffer(piece_type, user_name):
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            query = f"""
+                SELECT buffer_{piece_type} AS buffer
+                FROM users
+                WHERE user_name = '{user_name}'
+            """
+            cursor.execute(query)
+            buffer = cursor.fetchone()
+        return jsonify(buffer)
+    finally:
+        connection.close()
+
+
 @app.route('/stickers/<piece_type>/<user_name>', methods=['GET'])
 def get_user_stickers_and_letters(piece_type, user_name):
     connection = get_db_connection()
@@ -60,11 +77,16 @@ def get_user_stickers_and_letters(piece_type, user_name):
 @app.route('/commutators/<piece_type>/<user_name>', methods=['GET'])
 def get_user_commutators(piece_type, user_name):
     connection = get_db_connection()
+
+    buffer = get_user_buffer(piece_type, user_name).get_json()['buffer']
+    print('aaa')
+    print(buffer)
     try:
         with (connection.cursor() as cursor):
             query = f"""
             SELECT first_sticker, second_sticker, commutator, commutator_simplified
             FROM {piece_type}_commutators
+            WHERE buffer_sticker = '{buffer}'
             """
             cursor.execute(query)
             results = cursor.fetchall()
@@ -123,7 +145,6 @@ def update_letter_pair(id_: int) -> str:
         return jsonify({'error': str(e)}), 500
     finally:
         connection.close()
-
 
 
 if __name__ == '__main__':

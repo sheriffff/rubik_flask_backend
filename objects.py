@@ -1,4 +1,63 @@
-from commutator.commutator import expand, search
+from commutator.commutator import expand, search, algToArray, arrayToStr, invert
+
+
+def invert_pure_algorithm(algorithm: str) -> str:
+    moves_array = algToArray(algorithm)
+    inverted_moves_array = invert(moves_array)
+    inverted_algorithm = arrayToStr(inverted_moves_array)
+
+    return inverted_algorithm
+
+
+def invert_commutator(algorithm: str) -> str:
+    """
+    Invert a commutator algorithm.
+    """
+    if "[" not in algorithm:
+        return invert_pure_algorithm(algorithm)
+
+    commutator = algorithm.strip('[]')
+    part1, part2 = commutator.split(',')
+
+    inverted_commutator = f"[{part2.strip()}, {part1.strip()}]"
+
+    return inverted_commutator
+
+
+commutator = "[R U R', D]"
+inverted_commutator = invert_commutator(commutator)
+print("Original Commutator:", commutator)
+print("Inverted Commutator:", inverted_commutator)
+print("\n")
+
+
+def invert_conjugation_plus_commutator(algorithm: str) -> str:
+    """
+    Invert a conjugation plus commutator algorithm.
+    """
+    if "[" not in algorithm:
+        return invert_pure_algorithm(algorithm)
+
+    if ":" not in algorithm:
+        return invert_commutator(algorithm)
+
+    # both conjugation and commutator
+    conjugation, commutator = algorithm.split(':')
+
+    conjugation_inverted = conjugation
+    commutator_inverted = invert_commutator(commutator.strip())
+
+    inverted_algorithm = f"{conjugation_inverted}: {commutator_inverted}"
+
+    return inverted_algorithm
+
+
+# Example usage
+algorithm = "U' R': [R' D R, U']"
+inverted_algorithm = invert_conjugation_plus_commutator(algorithm)
+print("Original Algorithm:", algorithm)
+print("Inverted Algorithm:", inverted_algorithm)
+print("\n")
 
 
 class Commutator:

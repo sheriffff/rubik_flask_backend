@@ -104,5 +104,28 @@ def get_user_letter_pairs(user_name):
         connection.close()
 
 
+@app.route('/update_letter_pair/<int:id>', methods=['PATCH'])
+def update_letter_pair(id_: int) -> str:
+    data = request.json  # Get JSON body
+    column = data.get('column')
+    new_value = data.get('new_value')
+
+    if not column or not new_value:
+        return jsonify({'error': 'Invalid request data'}), 400
+
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            query = f"UPDATE letter_pairs SET {column} = %s WHERE id = %s"
+            cursor.execute(query, (new_value, id_))
+            connection.commit()
+        return jsonify({'message': 'Letter pair updated successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        connection.close()
+
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

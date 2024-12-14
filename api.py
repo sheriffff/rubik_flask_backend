@@ -79,8 +79,6 @@ def get_user_commutators(piece_type, user_name):
     connection = get_db_connection()
 
     buffer = get_user_buffer(piece_type, user_name).get_json()['buffer']
-    print('aaa')
-    print(buffer)
     try:
         with (connection.cursor() as cursor):
             query = f"""

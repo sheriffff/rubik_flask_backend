@@ -121,6 +121,7 @@ def update_letter_pair(id_: int) -> str:
             connection.commit()
         return jsonify({'message': 'Letter pair updated successfully'}), 200
     except Exception as e:
+        print(e)
         return jsonify({'error': str(e)}), 500
     finally:
         connection.close()

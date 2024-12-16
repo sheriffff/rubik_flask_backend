@@ -208,5 +208,40 @@ def delete_note(note_id):
         connection.close()
 
 
+@app.route('/verify_password', methods=['POST'])
+def verify_password():
+    data = request.get_json()
+
+    username = data.get('username')
+    hashed_password = data.get('hashedPassword')
+
+    if not username or not hashed_password:
+        return jsonify({'error': 'Username and hashed password are required'}), 400
+
+    connection = get_db_connection()
+    try:
+        print("hehe")
+        print(hashed_password)
+        with connection.cursor() as cursor:
+            query = "SELECT password_hash FROM users WHERE username = %s"
+            cursor.execute(query, (username,))
+            user = cursor.fetchone()
+
+            if not user:
+                return jsonify({'isValid': False}), 200
+
+            stored_hashed_password = user['password_hash']
+            is_valid = stored_hashed_password == hashed_password
+
+            return jsonify({'isValid': is_valid}), 200
+    except Exception as e:
+        print(f"Error verifying password: {e}")
+        return jsonify({'error': 'Server error'}), 500
+    finally:
+        connection.close()
+
+
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

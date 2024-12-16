@@ -145,5 +145,68 @@ def update_letter_pair(id_: int) -> str:
         connection.close()
 
 
+@app.route('/notes/<username>', methods=['GET'])
+def get_notes(username):
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            query = "SELECT id, username, content FROM notes WHERE username = %s"
+            cursor.execute(query, (username,))
+            notes = cursor.fetchall()
+        return jsonify(notes), 200
+    finally:
+        connection.close()
+
+
+@app.route('/notes', methods=['POST'])
+def add_note():
+    data = request.json
+    username = data.get('username')
+    content = data.get('content', '')
+    if not username:
+        return jsonify({'error': 'Username is required'}), 400
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            query = "INSERT INTO notes (username, content) VALUES (%s, %s)"
+            cursor.execute(query, (username, content))
+            connection.commit()
+            return jsonify({'message': 'Note added', 'id': cursor.lastrowid}), 201
+    finally:
+        connection.close()
+
+
+@app.route('/notes/<int:note_id>', methods=['PUT'])
+def update_note(note_id):
+    data = request.json
+    content = data.get('content', '')
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            query = "UPDATE notes SET content = %s WHERE id = %s"
+            cursor.execute(query, (content, note_id))
+            connection.commit()
+            if cursor.rowcount == 0:
+                return jsonify({'error': 'Note not found'}), 404
+            return jsonify({'message': 'Note updated'}), 200
+    finally:
+        connection.close()
+
+
+@app.route('/notes/<int:note_id>', methods=['DELETE'])
+def delete_note(note_id):
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            query = "DELETE FROM notes WHERE id = %s"
+            cursor.execute(query, (note_id,))
+            connection.commit()
+            if cursor.rowcount == 0:
+                return jsonify({'error': 'Note not found'}), 404
+            return jsonify({'message': 'Note deleted'}), 200
+    finally:
+        connection.close()
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -220,16 +220,15 @@ def verify_password():
 
     connection = get_db_connection()
     try:
-        print("hehe")
-        print(hashed_password)
         with connection.cursor() as cursor:
-            query = "SELECT password FROM users WHERE username = %s"
+            query = "SELECT password FROM users WHERE user_name = %s"
             cursor.execute(query, (username,))
             user = cursor.fetchone()
 
             if not user:
                 return jsonify({'isValid': False}), 200
-
+            print(hashed_password)
+            print(user['password'])
             stored_hashed_password = user['password']
             is_valid = stored_hashed_password == hashed_password
 

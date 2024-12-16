@@ -223,14 +223,14 @@ def verify_password():
         print("hehe")
         print(hashed_password)
         with connection.cursor() as cursor:
-            query = "SELECT password_hash FROM users WHERE username = %s"
+            query = "SELECT password FROM users WHERE username = %s"
             cursor.execute(query, (username,))
             user = cursor.fetchone()
 
             if not user:
                 return jsonify({'isValid': False}), 200
 
-            stored_hashed_password = user['password_hash']
+            stored_hashed_password = user['password']
             is_valid = stored_hashed_password == hashed_password
 
             return jsonify({'isValid': is_valid}), 200
